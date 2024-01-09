@@ -15,11 +15,18 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 
+
+
 /** AppSettingsPlugin */
 class AppSettingsPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   /// The Activity that will be used to start intents
   /// when the settings are opened as another task.
   private var activity: Activity? = null
+
+  companion object {
+    const val SETTINGS_REQUEST_CODE = 100 // or any other unique integer
+  }
+
 
   /// The MethodChannel that will the communication between Flutter and native Android
   ///
@@ -134,6 +141,29 @@ class AppSettingsPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
           it.startActivity(Intent(Settings.Panel.ACTION_WIFI))
           result.success(null)
         }
+        "display" -> {
+          it.startActivity(Intent(Settings.ACTION_DISPLAY_SETTINGS))
+          result.success(null)
+        }
+        "bluetooth" -> {
+          //it.startActivity(Intent(Settings.Panel.ACTION_DISPLAY_SETTINGS))
+          it.startActivity(Intent(Settings.ACTION_BLUETOOTH_SETTINGS))
+          result.success(null)
+        }
+        // Add new cases here
+        "apn" -> {
+          // Note: Direct APN access may be restricted
+          it.startActivity(Intent(Settings.ACTION_APN_SETTINGS))
+          result.success(null)
+        }
+//        "sim" -> {
+//          // For Dual SIM Settings. Might not be available on all devices.
+//          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+//            it.startActivity(Intent(Settings.ACTION_SIM_CARD_SETTINGS))
+//          } else {
+//            result.error("UNAVAILABLE", "SIM settings not available on this device/OS version", null)
+//          }
+//        }
         else -> result.notImplemented()
       }
     } ?: run {
@@ -258,10 +288,12 @@ class AppSettingsPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
       }
 
-      this.activity?.startActivity(intent)
+      //this.activity?.startActivity(intent)
+      this.activity?.startActivityForResult(intent, SETTINGS_REQUEST_CODE)
       result.success(null)
     } catch (e: Exception) {
       // If the Activity fails to start, show the app settings instead.
+      //openAppSettings(result, asAnotherTask)
       openAppSettings(result, asAnotherTask)
     }
   }
@@ -279,7 +311,9 @@ class AppSettingsPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
       }
 
-      this.activity?.startActivity(intent)
+
+      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+      this.activity?.startActivityForResult(intent, SETTINGS_REQUEST_CODE)
 
       result.success(null)
     } catch (e: Exception) {

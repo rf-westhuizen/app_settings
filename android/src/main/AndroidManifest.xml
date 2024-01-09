@@ -1,2 +1,28 @@
-<manifest package="com.spencerccf.app_settings">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.spencerccf.app_settings">
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
+
+
+    <application
+        android:name=".MainApplication"
+        android:label="app_settings"
+        android:icon="@mipmap/ic_launcher">
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/LaunchTheme"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustResize">
+            <!-- Specify more configurations if needed -->
+        </activity>
+        <!-- ... other services or activities ... -->
+    </application>
+
+
+
 </manifest>
+
+

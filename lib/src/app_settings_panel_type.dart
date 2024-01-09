@@ -21,4 +21,8 @@ enum AppSettingsPanelType {
   ///
   /// Corresponds to `Settings.Panel.ACTION_WIFI`.
   wifi,
+  display,
+  bluetooth,
+  apn,
+  sim,
 }

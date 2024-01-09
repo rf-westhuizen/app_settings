@@ -1,7 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:app_settings/app_settings.dart';
+import 'package:flutter/services.dart';
+//import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 
-void main() => runApp(const MyApp());
+import 'display_page.dart';
+
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky, overlays: [
+    //SystemUiOverlay.top,
+    //SystemUiOverlay.bottom
+  ]);
+
+  //SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge,overlays: []);
+
+  // immersive
+  // immersiveSticky
+  // leanBack
+  // edgeToEdge
+
+  //SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
+
+
+  runApp(const MaterialApp(home: MyApp()));
+}
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -11,6 +36,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
   List<Widget> getOpenAppSettingsActions() {
     return [
       ListTile(
@@ -124,46 +150,102 @@ class _MyAppState extends State<MyApp> {
         title: const Text('Volume'),
         onTap: () => AppSettings.openAppSettingsPanel(AppSettingsPanelType.volume),
       ),
+      ListTile(
+        title: const Text('display'),
+        onTap: () => AppSettings.openAppSettingsPanel(AppSettingsPanelType.display),
+      ),
+      ListTile(
+        title: const Text('brightness'),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const DisplaySettingsScreen()),
+          );
+        },
+      ),
+      ListTile(
+        title: const Text('bluetooth'),
+        onTap: () => AppSettings.openAppSettingsPanel(AppSettingsPanelType.bluetooth),
+      ),
+      ListTile(
+        title: const Text('apn'),
+        onTap: () => AppSettings.openAppSettingsPanel(AppSettingsPanelType.apn),
+      ),
+      ListTile(
+        title: const Text('sim'),
+        onTap: () => AppSettings.openAppSettingsPanel(AppSettingsPanelType.sim),
+      ),
     ];
   }
+
+  @override
+  void initState() {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky, overlays: []);
+    super.initState();
+  }
+  // @override
+  // void dispose() {
+  //   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.top,SystemUiOverlay.bottom]);
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
     final appSettingsActions = getOpenAppSettingsActions();
     final appSettingsPanelActions = getOpenAppSettingsPanelActions();
 
+    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    //
+    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom, SystemUiOverlay.top]);
+
+    //SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+
+    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
+    //   SystemUiOverlay.bottom,
+    // ]);
+
+    //SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //   statusBarColor: Colors.transparent,
+    //   statusBarIconBrightness: Brightness.dark,
+    // ));
+
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           title: const Text('App Settings Example App'),
+          automaticallyImplyLeading: false,
         ),
-        body: CustomScrollView(
-          slivers: [
-            const SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'openAppSettings() options',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        body: SafeArea(
+          child: CustomScrollView(
+            slivers: [
+              // const SliverToBoxAdapter(
+              //   child: Padding(
+              //     padding: EdgeInsets.all(8.0),
+              //     child: Text(
+              //       'openAppSettings() options',
+              //       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              //     ),
+              //   ),
+              // ),
+              // SliverList(
+              //   delegate: SliverChildListDelegate.fixed(appSettingsActions),
+              // ),
+              const SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    'openAppSettingsPanel() options',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
-            ),
-            SliverList(
-              delegate: SliverChildListDelegate.fixed(appSettingsActions),
-            ),
-            const SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'openAppSettingsPanel() options',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
+              SliverList(
+                delegate: SliverChildListDelegate.fixed(appSettingsPanelActions),
               ),
-            ),
-            SliverList(
-              delegate: SliverChildListDelegate.fixed(appSettingsPanelActions),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

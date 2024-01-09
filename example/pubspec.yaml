@@ -17,6 +17,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_windowmanager: ^0.2.0
+
 
   app_settings:
     # When depending on this package from a real application you should use:
